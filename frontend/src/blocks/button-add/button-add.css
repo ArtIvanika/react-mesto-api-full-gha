@@ -1,0 +1,23 @@
+.button-add{
+    border: 2px solid #FFFFFF;
+    border-radius: 2px;
+    background-color: black;
+    background-image: url(../../images/plus-vector.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 22px;
+    width: 150px;
+    height: 50px;
+    cursor: pointer;
+}
+.button-add:hover{
+    opacity: 0.6;
+}
+@media screen and (max-width: 900px){
+    .button-add {
+       max-width: 320px;
+       width: 282px;
+       margin-top: 32px;
+       background-size: 16px;
+    }
+}

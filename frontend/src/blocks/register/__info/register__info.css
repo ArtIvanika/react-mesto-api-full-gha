@@ -1,0 +1,24 @@
+.register__info {
+    border: 0;
+    width: 100%;
+    min-height: 35px;
+    box-sizing: border-box;
+    border-bottom: 2px solid #CCCCCC;
+    background-color: transparent;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 17px;
+    margin-bottom: 0;
+    color: #FFFFFF;
+}
+
+.register__info:not(:first-child){
+    margin-top: 25px;
+}
+      
+@media screen and (max-width: 650px){
+    .register__info {
+        font-size: 14px;
+        line-height: 17px;
+    }
+}

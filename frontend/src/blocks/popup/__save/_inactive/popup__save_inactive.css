@@ -1,0 +1,4 @@
+.popup__save_inactive{
+    background: #E5E5E5;
+    pointer-events: none;
+}

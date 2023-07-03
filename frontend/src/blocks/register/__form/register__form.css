@@ -1,0 +1,10 @@
+.register__form{
+    border: 0;
+    text-align: center;
+
+}
+@media screen and (max-width: 650px){
+    .register__form {
+     width: 260px;
+    }
+}

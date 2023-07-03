@@ -1,0 +1,17 @@
+.profile__foto-btn{
+    position: absolute;
+    background-image: url(../../../images/ava-edit-pencil.png);
+    background-color: black;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 120px;
+    height: 120px;
+    border: none;
+    top: 0px;
+    right: 0px;
+    cursor: pointer;
+    opacity: 0;
+}
+.profile__foto-btn:hover{
+    opacity: 0.8;
+}
