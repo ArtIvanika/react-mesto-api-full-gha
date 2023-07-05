@@ -202,14 +202,9 @@ function App() {
 
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((id) => id === currentUser._id);
-  //   console.log(card)
-  //   console.log(card.likes)
-  //   const isLiked = card.likes.some((id) => {
-  //      console.log(id);
-  //      console.log(currentUser._id);
-  //      return id === currentUser._id;
-  // });
+    const isLiked = card.likes.some((id) => {
+       return id === currentUser._id;
+  });
 
     if (!isLiked) {
       // Отправляем запрос в API и получаем обновлённые данные карточки
@@ -242,7 +237,6 @@ function App() {
           c._id === card._id ? "" : newCard
         );
         setCards((state) => state.filter((item) => item._id !== card._id));
-       // setCards(newCards);
       })
       .catch((err) => console.log(err));
   }
