@@ -131,7 +131,8 @@
 }
 
 const api = new Api({
-  baseUrl: "http://localhost:3000",
+  baseUrl: "https://api.ivanika.nomoreparties.sbs",
+ // baseUrl: "http://localhost:3000",
   // headers: {
   //   authorization: "22a3f4d4-5ffd-4789-9813-a7106adf4dad",
   //   "Content-Type": "application/json",

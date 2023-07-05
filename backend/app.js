@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require('express');
 const mongoose = require('mongoose');
 const { errors } = require('celebrate');
@@ -21,6 +23,12 @@ mongoose
 app.use(express.json());
 
 app.use(requestLogger); // подключаем логгер запросов
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use(routes);
 

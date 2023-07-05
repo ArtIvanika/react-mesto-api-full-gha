@@ -200,31 +200,16 @@ function App() {
       });
   }
 
-  // function handleCardLike(card) {
-  //   // Снова проверяем, есть ли уже лайк на этой карточке
-  //   // //const isLiked = card.likes.some((i) => i._id === currentUser._id);
-  //   const isLiked = card.likes.some((id) => id === currentUser._id);
-
-  //   api
-  //     .changeLike(card._id, isLiked)
-  //     .then((newCard) => {
-  //       setCards((state) =>
-  //         state.map((c) => (c._id === card._id ? newCard : c))
-  //       );
-  //     })
-  //     .catch((err) => console.log(err));
-  // }
-
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    //const isLiked = card.likes.some((i) => i._id === currentUser._id);
-    console.log(card)
-    console.log(card.likes)
-    const isLiked = card.likes.some((id) => {
-       console.log(id);
-       console.log(currentUser._id);
-       return id === currentUser._id;
-  });
+    const isLiked = card.likes.some((id) => id === currentUser._id);
+  //   console.log(card)
+  //   console.log(card.likes)
+  //   const isLiked = card.likes.some((id) => {
+  //      console.log(id);
+  //      console.log(currentUser._id);
+  //      return id === currentUser._id;
+  // });
 
     if (!isLiked) {
       // Отправляем запрос в API и получаем обновлённые данные карточки
@@ -253,15 +238,11 @@ function App() {
     api
       .deleteCard(card._id)
       .then((newCard) => {
-      // .then(() => {
-      //   setCards((newCard) => {
-      //     newCard.filter((data) => data._id.toString() !== card._id.toString());
-      //   });
         const newCards = cards.filter((c) =>
           c._id === card._id ? "" : newCard
         );
-       // setCards((state) => state.filter((item) => item._id !== card._id));
-        setCards(newCards);
+        setCards((state) => state.filter((item) => item._id !== card._id));
+       // setCards(newCards);
       })
       .catch((err) => console.log(err));
   }
