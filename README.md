@@ -9,7 +9,7 @@
 
 ## Ссылки на проект
 
-IP-адрес 51.250.85.120
+IP 51.250.85.120
 
 Frontend https://ivanika.nomoreparties.sbs
 
