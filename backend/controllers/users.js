@@ -108,6 +108,7 @@ const updateAvatar = (req, res, next) => {
     });
 };
 
+//
 const login = (req, res, next) => {
   const { email, password } = req.body;
 

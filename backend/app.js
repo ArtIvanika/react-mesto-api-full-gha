@@ -1,17 +1,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const { errors } = require('celebrate');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const { errors } = require('celebrate');
 const routes = require('./routes/index');
-const cors = require('cors');
-
 const errorHandler = require('./middlewares/error-handler');
 
 const app = express();
 
 const { PORT = 3000 } = process.env;
-// app.use(cors());
+// app.use(cors({origin: "http://localhost:3000"}));
+app.use(cors());
 
 mongoose
   .connect('mongodb://127.0.0.1:27017/mestodb')

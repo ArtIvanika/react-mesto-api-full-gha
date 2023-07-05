@@ -6,7 +6,7 @@ const ForbiddenError = require('../errors/ForbiddenError'); // 403
 
 const getCards = (req, res, next) => {
   Card.find({})
-    .then((card) => res.send( card ))
+    .then((cards) => res.send(cards))
     .catch(next);
 };
 
@@ -50,6 +50,7 @@ const putCardLike = (req, res, next) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
+  // .populate(['likes', 'owner'])
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки');
@@ -70,6 +71,7 @@ const deleteCardLike = (req, res, next) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
+    // .populate(['likes', 'owner'])
     .then((card) => {
       if (!card) {
         throw new NotFoundError('Передан несуществующий _id карточки');

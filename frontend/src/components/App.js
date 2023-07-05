@@ -12,7 +12,7 @@ import Register from "./Register";
 import Login from "./Login";
 import InfoTooltip from "./InfoTooltip";
 import api from "../utils/Api";
-import {useEffect, useState} from "react";
+import { useEffect, useState } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import ProtectedRouteElement from "./ ProtectedRoute";
 
@@ -26,15 +26,12 @@ function App() {
 
   const navigate = useNavigate();
 
-  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] =
-    useState(false);
+  const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
-  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] =
-    useState(false);
-    const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
+  const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
+  const [isInfoTooltipPopupOpen, setInfoTooltipPopupOpen] = useState(false);
   //попап удаления
-  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] =
-    useState(false);
+  const [isDeleteCardPopupOpen, setIsDeleteCardPopupOpen] = useState(false);
   const [selectedCard, setSelectedCard] = useState({
     isOpen: false,
     item: {},
@@ -43,14 +40,74 @@ function App() {
   useEffect(() => {
     // const token = localStorage.getItem("token");
     // if(token){
-    if(loggedIn){
-    Promise.all([api.getUserInfo(), api.getInitialCards()])
-      .then(([userData, cards]) => {
-        setCurrentUser(userData);
-        setCards(cards);
-  })
-      .catch((err) => console.log(err));}
+    if (loggedIn) {
+      Promise.all([api.getUserInfo(), api.getInitialCards()])
+        .then(([userData, cards]) => {
+          setCurrentUser(userData);
+          setCards(cards.reverse());
+        })
+        .catch((err) => console.log(err));
+    }
   }, [loggedIn]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      auth
+        .checkToken(token)
+        .then((res) => {
+          // console.log(res);
+          if (res) {
+            const email = res.email;
+            setUserData(email);
+            setLoggedIn(true);
+            navigate("/cards", { replace: true });
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   // const token = localStorage.getItem("token");
+  //   // if(token){
+  //   if(loggedIn){
+  //   Promise.all([api.getUserInfo(), api.getInitialCards()])
+  //     .then(([userData, cards]) => {
+  //       setCurrentUser(userData);
+  //       setCards(cards);
+  // })
+  //     .catch((err) => console.log(err));}
+  // }, [loggedIn]);
+
+  // const checkAuthToken = () => {
+  //   const token = localStorage.getItem("jwt");
+  //   if(token){
+  //     // auth.checkToken(token)
+  //     auth
+  //     .checkToken()
+  //     .then((res) => {
+  //       console.log(res)
+  //       if(res){
+  //         const email = res.email;
+  //         setUserData(email);
+  //         setLoggedIn(true);
+  //         navigate("/cards", {replace: true})
+  //       } else{
+  //         setLoggedIn(false);
+  //       }
+  //     }).catch((err) =>
+  //     console.log(err))
+  //     // {
+  //     //   setLoggedIn(false);
+  //     //   console.log(err);
+  //     // })
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   checkAuthToken();
+  // }, []);
 
   function handleEditAvatarClick() {
     setIsEditAvatarPopupOpen(true);
@@ -143,9 +200,25 @@ function App() {
       });
   }
 
+  // function handleCardLike(card) {
+  //   // Снова проверяем, есть ли уже лайк на этой карточке
+  //   // //const isLiked = card.likes.some((i) => i._id === currentUser._id);
+  //   const isLiked = card.likes.some((id) => id === currentUser._id);
+
+  //   api
+  //     .changeLike(card._id, isLiked)
+  //     .then((newCard) => {
+  //       setCards((state) =>
+  //         state.map((c) => (c._id === card._id ? newCard : c))
+  //       );
+  //     })
+  //     .catch((err) => console.log(err));
+  // }
+
   function handleCardLike(card) {
     // Снова проверяем, есть ли уже лайк на этой карточке
-    const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    //const isLiked = card.likes.some((i) => i._id === currentUser._id);
+    const isLiked = card.likes.some((id) => id === currentUser._id);
 
     if (!isLiked) {
       // Отправляем запрос в API и получаем обновлённые данные карточки
@@ -155,15 +228,18 @@ function App() {
           setCards((state) =>
             state.map((c) => (c._id === card._id ? newCard : c))
           );
-        }).catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     } else {
       api
         .deleteLike(card._id, !isLiked)
         .then((newCard) => {
-          setCards((state) =>
-            state.map((c) => (c._id === card._id ? newCard : c))
+          setCards(
+            (state) => state.map((c) => (c._id === card._id ? newCard : c))
+            // state.filter((data) => data._id.toString() !== card._id.toString())
           );
-        }).catch((err) => console.log(err));
+        })
+        .catch((err) => console.log(err));
     }
   }
 
@@ -171,78 +247,65 @@ function App() {
     api
       .deleteCard(card._id)
       .then((newCard) => {
+      // .then(() => {
+      //   setCards((newCard) => {
+      //     newCard.filter((data) => data._id.toString() !== card._id.toString());
+      //   });
         const newCards = cards.filter((c) =>
           c._id === card._id ? "" : newCard
         );
-        setCards((state) => state.filter((item) => item._id !== card._id));
-        //setCards(newCards);
+       // setCards((state) => state.filter((item) => item._id !== card._id));
+        setCards(newCards);
       })
       .catch((err) => console.log(err));
   }
 
-  function handleLogin(email, password){
-    auth.authorize(email, password)
-    .then((data) => {
-      console.log(data)
-      if(data.token){
-        setUserData(email);
-        setLoggedIn(true);
-        navigate("/cards", { replace: true });
-  }})
-    .catch((err) => {
-      console.log(err);
-      setStatusInfoTooltip(false);
-      setInfoTooltipPopupOpen(true);
-    })
-  };
-
-  function handleRegister(email, password){
-    auth.register(email, password)
-    .then(() => {
-      navigate("/signin", { replace: true });
-      setStatusInfoTooltip(true);
-    })
-    .catch((err) => {
-      console.log(err);
-      setStatusInfoTooltip(false);
-    })
-    .finally(() => {
-      setInfoTooltipPopupOpen(true);
-    });
-}
-
-function signOut() {
-  localStorage.removeItem("token");
-  setUserData("");
-  setLoggedIn(false);
-  navigate("/signin", { replace: true });
-}
-
-  const checkAuthToken = () => {
-    const token = localStorage.getItem("token");
-    if(token){
-      auth.checkToken(token)
-      .then((res) => {
-        console.log(res)
-        if(res){
-          const email = res.email;
+  function handleLogin(email, password) {
+    auth
+      .authorize(email, password)
+      .then((data) => {
+        console.log(data);
+        if (data.token) {
           setUserData(email);
           setLoggedIn(true);
-          navigate("/cards", {replace: true})
+          navigate("/cards", { replace: true });
         }
-      }).catch((err) => console.log(err))
-    } 
-  };
+      })
+      .catch((err) => {
+        console.log(err);
+        setStatusInfoTooltip(false);
+        setInfoTooltipPopupOpen(true);
+      });
+  }
 
-  useEffect(() => {
-    checkAuthToken();
-  }, []);
+  function handleRegister(email, password) {
+    auth
+      .register(email, password)
+      .then(() => {
+        navigate("/signin", { replace: true });
+        setStatusInfoTooltip(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setStatusInfoTooltip(false);
+      })
+      .finally(() => {
+        setInfoTooltipPopupOpen(true);
+      });
+  }
+
+  function signOut() {
+    localStorage.removeItem("token");
+    setUserData("");
+    setLoggedIn(false);
+    navigate("/signin", { replace: true });
+  }
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">
         <div className="page">
-          <Header userData={userData} signOut={signOut}/>
+          <Header userData={userData} signOut={signOut} />
           <main>
             <Routes>
               <Route
